@@ -1,3 +1,9 @@
+using APBD9;
+using APBD9.Policy;
+using APBD9.Repository;
+using APBD9.UseCase;
+using Microsoft.EntityFrameworkCore;
+
 public class Program
 {
     
@@ -10,9 +16,21 @@ public class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
         builder.Services.AddControllers();
-        // builder.Services.AddScoped<IAnimalService, AnimalService>();
-        // builder.Services.AddSingleton<IAnimalRepository,AnimalRepository>();
-
+        var connectionString = builder.Configuration.GetConnectionString("MyConnectionString");
+        builder.Services.AddDbContext<MasterContext>(option => option.UseSqlServer(connectionString));
+        
+        builder.Services.AddScoped<IPagingPolicy, PagingPolicy>();
+        builder.Services.AddScoped<IClientTripConnectionExistsPolicy, ClientTripConnectionExistsPolicy>();
+        builder.Services.AddScoped<ICreateClientValidPolicy, CreateClientValidPolicy>();
+        
+        builder.Services.AddScoped<IClientTripsRepository, ClientTripsRepository>();
+        builder.Services.AddScoped<IClientRepository, ClientRepository>();
+        builder.Services.AddScoped<ITripRepository,TripRepository>();
+        
+        builder.Services.AddScoped<ICreateClientAndAssignToTheTripUseCase, CreateClientAndAssignToTheTripUseCase>();
+        builder.Services.AddScoped<IGetTripsUseCase, GetTripsUseCase>();
+        builder.Services.AddScoped<IDeleteClientUseCase, DeleteClientUseCase>();
+        
         var app = builder.Build();
 
         //Configuring the HTTP request pipeline
