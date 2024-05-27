@@ -36,7 +36,7 @@ public class CreateClientAndAssignToTheTripUseCase : ICreateClientAndAssignToThe
             Telephone = clientTripPostDto.Telephone,
             Pesel = clientTripPostDto.Pesel
         });
-        _clientTripsRepository.CreateClientTrip(new ClientTrip()
+        await _clientTripsRepository.CreateClientTrip(new ClientTrip()
         {
             IdClient = clientId,
             IdTrip = clientTripPostDto.IdTrip,
